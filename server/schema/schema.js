@@ -142,9 +142,40 @@ const mutation = new GraphQLObjectType({
         resolve(parent, args){
           return Project.findByIdAndRemove(args.id)
         }
+      },
+      //Update existing project
+      updateProject:{
+        type: ProjectType,
+        args: {
+          id: {type: new GraphQLNonNull(GraphQLID)},
+          name: {type:GraphQLString},
+          description: {type: GraphQLString},
+          status: {type: new GraphQLEnumType({
+            name: 'ProjectStatusUpdate',
+            values: {
+              'new' : {value: 'Not started'},
+              'progress' : {value: 'In progress'},
+              'complete' : {value: 'Completed'},
+            }
+          })
+          },
+        },
+        resolve(parent, args){
+          return Project.findByIdAndUpdate(
+            args.id,
+            {
+              $set:{
+                name: args.name,
+                description: args.description,
+                status: args.status,
+              }
+            },
+            {new: true}
+            );
+        }
       }
   }
-})
+});
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
