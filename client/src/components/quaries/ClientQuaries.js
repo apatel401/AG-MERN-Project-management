@@ -10,14 +10,3 @@ export const GET_CLIENTS = gql`
     }
   }
 `;
-
-export const GET_PROJECTS = gql`
-  query getProjects {
-    clients {
-      id
-      name
-      email
-      phone
-    }
-  }
-`;
