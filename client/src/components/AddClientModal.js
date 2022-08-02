@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useMutation } from "@apollo/client";
 import { ADD_CLIENT } from "./mutations/ClientMutation";
-import { GET_CLIENTS } from "./quaries/ClientQuaries";
+import { GET_CLIENTS } from "./quaries/clientQueries";
 
 export default function AddClientModal() {
   const [name, setName] = useState("");
@@ -16,14 +16,20 @@ export default function AddClientModal() {
       });
       cache.writeQuery({
         query: GET_CLIENTS,
-        data: { clients: {...clients, addClient } },
+        data: { clients: { ...clients, addClient } },
       });
     },
   });
-  const [getClient] = useMutation(GET_CLIENTS);
+  // const [getClient] = useMutation(GET_CLIENTS);
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (name === "" || email === "" || phone === "")
+      return alert("Please fill all field");
+    addClient(name, email, phone);
+    setName("");
+    setEmail("");
+    setPhone("");
   };
   return (
     <>
