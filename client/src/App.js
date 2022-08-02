@@ -2,6 +2,7 @@ import "./App.css";
 import Header from "./components/Header";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import Clients from "./components/Clients";
+import AddClientModal from "./components/AddClientModal";
 
 function App() {
   //merging queries to avoid warning in console
@@ -11,23 +12,22 @@ function App() {
       query:{
         fields:{
           clients: {
-            merge(existing, incoming, { mergeObjects }){
-              return mergeObjects(existing, incoming);
-            }
+           merge(existing, incoming, mergeObject){
+return mergeObject(existing, incoming)
+           }
           },
           projects: {
-            merge(existing, incoming, { mergeObjects }){
-              return mergeObjects(existing, incoming);
-            }
+            merge(existing, incoming, mergeObject){
+              return mergeObject(existing, incoming)
+                         }
           },
-        }
-      }
+        },
+      },
     }
   });
 
   const client = new ApolloClient({
     uri: "http://localhost:4444/graphql",
-    // cache: new InMemoryCache(),
     cache,
   });
 
@@ -36,6 +36,7 @@ function App() {
       <ApolloProvider client={client}>
         <Header />
         <div className="container">
+          <AddClientModal />
           <Clients />
         </div>
       </ApolloProvider>
