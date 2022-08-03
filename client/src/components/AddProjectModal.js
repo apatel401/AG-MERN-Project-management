@@ -11,20 +11,20 @@ export default function addProjectModal() {
   const [status, setStatus] = useState("new");
   const [description, setDescription] = useState("");
   const [clientId, setClientId] = useState("");
-  const [clientName, setClientName] = useState("");
-  const [clientEmail, setClientEmail] = useState("");
-  const [clientPhone, setClientPhone] = useState("");
+  // const [clientName, setClientName] = useState("");
+  // const [clientEmail, setClientEmail] = useState("");
+  // const [clientPhone, setClientPhone] = useState("");
   const {loading, error, data} = useQuery(GET_CLIENTS);
 
   const [addProject] = useMutation(ADD_PROJECT, {
-    variables: { name, description, status },
+    variables: { name, description, status, clientId },
     update(cache, { data: { addProject } }) {
       const { projects } = cache.readQuery({
         query: GET_PROJECTS,
       });
       cache.writeQuery({
         query: GET_PROJECTS,
-        data: { projects: { ...projects, addProject } },
+        data: { projects: [...projects, addProject] },
       });
     },
   });
@@ -33,7 +33,7 @@ export default function addProjectModal() {
     e.preventDefault();
     if (name === "" || description === "" || status === "")
       return alert("Please fill all field");
-    addProject(name, description, status);
+    addProject(name, description, status, clientId);
     setName("");
     setDescription("");
     setStatus("new");
